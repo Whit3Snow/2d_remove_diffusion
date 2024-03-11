@@ -33,14 +33,16 @@ print("Start Inference!")
 device = "cuda"
 model_id = "runwayml/stable-diffusion-v1-5"
 pipe = StableDiffusionFreeGuidancePipeline.from_pretrained(model_id, torch_dtype=torch.float16, variant="fp16")
-pipe.unet = UNetDistributedDataParallel(pipe.unet, device_ids=[0]).cuda()
+pipe.safety_checker = None
+pipe.feature_extractor = None
+# pipe.unet = UNetDistributedDataParallel(pipe.unet, device_ids=[0]).cuda()
 # pipe.vae = UNetDistributedDataParallel(pipe.vae, device_ids=[0,1,2]).cuda()
 # pipe.text_encoder = UNetDistributedDataParallel(pipe.text_encoder, device_ids=[0,1,2]).cuda()
 # pipe.unet = pipe.unet.to(device)
 # pipe.text_encoder = UNetDistributedDataParallel(pipe.text_encoder, device_ids=[0,1,2,3,4], output_device=3).cuda()
 # pipe.unet.config, pipe.unet.dtype, pipe.unet.attn_processors, pipe.unet.set_attn_processor = pipe.unet.module.config, pipe.unet.module.dtype, pipe.unet.module.attn_processors, pipe.unet.module.set_attn_processor
 # pipe.unet.config, pipe.unet.dtype = pipe.unet.module.config, pipe.unet.module.dtype
-pipe.unet = pipe.unet.module
+# pipe.unet = pipe.unet.module
 pipe = pipe.to(device)
 pipe.scheduler = DDPMScheduler.from_config(pipe.scheduler.config)
 pipe.enable_attention_slicing()
