@@ -93,6 +93,7 @@ def fix_shapes_l2(orig_attns, edit_attns, indices, tau=fc.noop): # move
                 # orig_shape[:,:,:] = 0
                 # delta = (orig_shape - get_shape(edit)).pow(2).mean()
                 
+                # 원래 A에서 target object를 빼서 가져온 A^, edit 할 A_e 가 같아지도록 빼준다. 
                 delta = (tau(get_shape(orig)) - get_shape(edit)).pow(2).mean()
                 deltas.append(delta.mean())
             shapes.append(torch.stack(deltas).mean())
@@ -177,7 +178,13 @@ def roll_shape(x, direction='up', factor=0.5):
     x = x.view(shape)
     # breakpoint()
     move = x.roll(mag, dims=(1,2))
-    # move[:, :, int(-w*factor):, :] = 0
+    
+    if direction == 'up': move[:, int(-h*factor):, :, :] = 0
+    elif direction == 'down': move[:, : int(h*factor),:, :] = 0
+    elif direction == 'right': move[:, :, :int(w*factor), :] = 0
+    elif direction == 'left': move[:, :, int(-w*factor):, :] = 0
+
+    print("move:\n", (move == 0).all())
     return move.view(x.shape[0], h*h, x.shape[-1])
 
 def enlarge(x, scale_factor=1):

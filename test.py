@@ -48,27 +48,27 @@ pipe.scheduler = DDPMScheduler.from_config(pipe.scheduler.config)
 pipe.enable_attention_slicing()
 torch.backends.cudnn.benchmark = True
 
-import os
-for file in os.scandir("/home/nas4_user/sungwonhwang/ws_student/hyojinjang/2D/Free-Guidance-Diffusion/outputs"):
-        os.remove(file.path)
+# import os
+# for file in os.scandir("/home/nas4_user/sungwonhwang/ws_student/hyojinjang/2D/Free-Guidance-Diffusion/outputs"):
+#         os.remove(file.path)
 
 
 
-print("non error")
-seed = int(torch.rand((1,)) * 100000)
-generator=torch.manual_seed(56572)
-# generator=torch.manual_seed(21533)
+# print("non error")
+# seed = int(torch.rand((1,)) * 100000)
+# generator=torch.manual_seed(56572)
+# # generator=torch.manual_seed(21533)
 
-print(seed)
-prompt = 'a red balloon floating in the air'
-object_to_edit = 'red balloon'
-guidance = partial(edit_appearance_object, shape_weight=1)
-image_list = pipe(prompt, obj_to_edit =object_to_edit, height=512, width=512, num_inference_steps=50, generator=generator,
-        max_guidance_iter_per_step=1, guidance_func=guidance, g_weight=2500)
-ls = ['edit10', 'ori10']
-for i, image in enumerate(image_list):
-    image.images[0].save(f"outputs/{seed}_{ls[i]}.png")
-show_images([i for i in [image_list[0].images[0], image_list[1].images[0]]], titles=['edited', 'original'])
+# print(seed)
+# prompt = 'a red balloon floating in the air'
+# object_to_edit = 'red balloon'
+# guidance = partial(edit_appearance_object, shape_weight=1)
+# image_list = pipe(prompt, obj_to_edit =object_to_edit, height=512, width=512, num_inference_steps=50, generator=generator,
+#         max_guidance_iter_per_step=1, guidance_func=guidance, g_weight=2500)
+# ls = ['edit10', 'ori10']
+# for i, image in enumerate(image_list):
+#     image.images[0].save(f"outputs/{seed}_{ls[i]}.png")
+# show_images([i for i in [image_list[0].images[0], image_list[1].images[0]]], titles=['edited', 'original'])
 
 # ############################### 풍선 ##############################################################################################
 # seed = int(torch.rand((1,)) * 100000)
@@ -90,23 +90,23 @@ show_images([i for i in [image_list[0].images[0], image_list[1].images[0]]], tit
 ############################### 풍선 ##############################################################################################
 
 
-# seed = int(torch.rand((1,)) * 100000)
-# generator=torch.manual_seed(21533)
-# # generator=torch.manual_seed(56572)
+seed = int(torch.rand((1,)) * 100000)
+generator=torch.manual_seed(21533)
+# generator=torch.manual_seed(56572)
 
-# print(seed)
-# prompt = 'a red balloon floating in the air'
-# object_to_edit = 'red balloon'
-# move = partial(roll_shape, direction='left', factor=1)
-# guidance = partial(move_object_by_shape, shape_weight=1, appearance_weight=1, position_weight= 6, tau=move)
-# image_list = pipe(prompt, obj_to_edit =object_to_edit, height=512, width=512, num_inference_steps=50, generator=generator,
-#         max_guidance_iter_per_step=1, guidance_func=guidance, g_weight=1500)
-# ls = ['edit', 'ori']
-# for i, image in enumerate(image_list):
-#     image.images[0].save(f"outputs/{seed}_{ls[i]}.png")
-# show_images([i for i in [image_list[0].images[0], image_list[1].images[0]]], titles=['edited', 'original'])
+print(seed)
+prompt = 'a red balloon floating in the air'
+object_to_edit = 'red balloon'
+move = partial(roll_shape, direction='left', factor=1)
+guidance = partial(move_object_by_shape, shape_weight=1, appearance_weight=1, position_weight= 6, tau=move)
+image_list = pipe(prompt, obj_to_edit =object_to_edit, height=512, width=512, num_inference_steps=50, generator=generator,
+        max_guidance_iter_per_step=1, guidance_func=guidance, g_weight=1500)
+ls = ['edit1', 'ori1']
+for i, image in enumerate(image_list):
+    image.images[0].save(f"outputs/{seed}_{ls[i]}.png")
+show_images([i for i in [image_list[0].images[0], image_list[1].images[0]]], titles=['edited', 'original'])
 
-# print("non error")
+print("non error")
 
 
 # seed = int(torch.rand((1,)) * 100000)
